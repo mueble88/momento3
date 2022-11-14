@@ -6,12 +6,15 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Button,
 } from "react-native";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 export default function VendedoresScreen({ route }) {
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const onSubmit = data => console.log(data);
 
     const [isLoading, setLoading] = useState(true); //componente visual de carga, muestra una bolita cargando
     const [data, setData] = useState([]);
@@ -19,7 +22,7 @@ export default function VendedoresScreen({ route }) {
     const [correoe, setCorreo] = useState("");
     const [totalcomision, setTotalComision] = useState("");
     const [sid, setSid] = useState("");
-    const ip = "http://192.168.1.13:3000";
+    const ip = "http://192.168.1.60:3000";
 
   const saveVendedor = async () => {
     if (!nombre.trim() || !correoe.trim() || !totalcomision.trim()) {
@@ -85,14 +88,67 @@ export default function VendedoresScreen({ route }) {
   return (
 
     <View style={{ flex: 1, padding: 24 }}>
+
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <h1 style={styles.title}>Guarde o Busque vendedores</h1>
+        <input
+          type="text"
+          style={styles.inputs}
+          {...register('nombre', {
+            required: true,
+            pattern: /^[a-zA-Z\s]*$/
+          })}
+          placeholder="Ingrese nombre"
+          onChange={e => setNombre(e.target.value)}
+          value={nombre}
+        />
+        {errors.nombre?.type === 'required' && <Text style={styles.errmess}>Campo obligatorio</Text>}
+        {errors.nombre?.type === 'pattern' && <Text style={styles.errmess}>Solo letras y/o espacios</Text>}
+
+        <input
+          type="text"
+          style={styles.inputs}
+          {...register('correoe', {
+            required: true,
+            pattern: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
+          })}
+          placeholder="Ingrese correo electrónico"
+          onChange={e => setCorreo(e.target.value)}
+          value={correoe}
+        />
+        {errors.correoe?.type === 'required' && <Text style={styles.errmess}>Campo obligatorio</Text>}
+        {errors.correoe?.type === 'pattern' && <Text style={styles.errmess}>Ingrese un correo válido</Text>}
+
+        <input
+          type="text"
+          style={styles.inputs}
+          {...register('totalcomision', {
+            required: true,
+            pattern: /^\d+$/
+          })}
+          placeholder="Ingrese comisión"
+          onChange={e => setTotalComision(e.target.value)}
+          value={totalcomision}
+        />
+        {errors.totalcomision?.type === 'required' && <Text style={styles.errmess}>Campo obligatorio</Text>}
+        {errors.totalcomision?.type === 'pattern' && <Text style={styles.errmess}>Solo números</Text>}
+        
+        <TouchableOpacity
+          style={[styles.buttons, { backgroundColor: "#1ABC9C" }]}
+          onPress={handleSubmit(saveVendedor)}
+        >
+          <Text style={{ color: "white" }}>Guardar</Text>
+        </TouchableOpacity>
+      </form>
+
       <View>
         <TextInput
-          placeholder="Ingrese ID"
+          placeholder="Ingrese ID a buscar"
           style={styles.inputs}
           onChangeText={(sid) => setSid(sid)}
           value={sid}
         />
-        <TextInput
+        {/* <TextInput
           placeholder="Ingrese nombre"
           style={styles.inputs}
           onChangeText={(nombre) => setNombre(nombre)}
@@ -109,7 +165,7 @@ export default function VendedoresScreen({ route }) {
           style={styles.inputs}
           onChangeText={(totalcomision) => setTotalComision(totalcomision)}
           value={totalcomision}
-        />
+        /> */}
         
         <TouchableOpacity
           style={[styles.buttons, { backgroundColor: "#1ABC9C" }]}
@@ -125,12 +181,9 @@ export default function VendedoresScreen({ route }) {
           <Text style={{ color: "white" }}>Buscar Vendedores</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[styles.buttons, { backgroundColor: "#1ABC9C" }]}
-          onPress={saveVendedor}
-        >
-          <Text style={{ color: "white" }}>Guardar</Text>
-        </TouchableOpacity>
+        
+
+        
       </View>
       {isLoading ? (
         <ActivityIndicator size="large" color="black" />
@@ -154,7 +207,7 @@ export default function VendedoresScreen({ route }) {
                 }
               }}
             >
-              <Text>{item.nombre}</Text>
+              <Text>Nombre: {item.nombre}| Correo: {item.correoe}| Comisión: {item.totalcomision}</Text>
             </TouchableOpacity>
           )}
         />
@@ -185,5 +238,15 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     textAlign: "center",
     padding: 5,
+    width: '-webkit-fill-available',
   },
+  errmess:{
+    display:"flex",
+    color:'red',
+    justifyContent: 'center',
+  },
+  title:{
+    fontFamily:'Helvetica',
+    textAlign: 'center',
+  }
 });
