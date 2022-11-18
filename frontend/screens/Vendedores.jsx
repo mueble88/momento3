@@ -74,6 +74,7 @@ export default function VendedoresScreen({ route }) {
     try {
       const response = await axios.get(`${ip}/api/vendedor/${id}`);
       setData(response.data);
+      // setSid(response.data.sid);
       setIdvend(response.data.idvend);
       setNombre(response.data.nombre);
       setCorreo(response.data.correoe);
