@@ -27,7 +27,7 @@ exports.deleteVendedores = (req, res) =>
 exports.updateVendedores = (req, res) =>
     Vendedores.findOneAndUpdate(
         { _id: req.params.id },
-        { $set: { nombre: req.body.nombre, correoe: req.body.correoe, totalcomision: req.body.totalcomision } }, 
+        { $set: {idvend: req.body.idvend, nombre: req.body.nombre, correoe: req.body.correoe, totalcomision: req.body.totalcomision } }, 
         (err, data) => {
             if (err) res.json({ error: err });
             else     res.json(data);
@@ -36,7 +36,7 @@ exports.updateVendedores = (req, res) =>
 
 
 exports.createVendedores = (req, res) =>
-    new Vendedores({ nombre: req.body.nombre, correoe: req.body.correoe, totalcomision: req.body.totalcomision })
+    new Vendedores({idvend: req.body.idvend, nombre: req.body.nombre, correoe: req.body.correoe, totalcomision: req.body.totalcomision })
     .save((err, data) => {
         if (err) res.json({ error: err });
         else     res.json(data);

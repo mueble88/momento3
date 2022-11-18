@@ -10,7 +10,6 @@ import {
   import axios from "axios";
   import React, { useEffect, useState } from "react";
   
-  
   export default function VentasScreen({ route }) {
     const [isLoading, setLoading] = useState(true); //componente visual de carga, muestra una bolita cargando
     const [data, setData] = useState([]);
@@ -18,7 +17,7 @@ import {
     const [fecha, setFecha] = useState("");
     const [valorventa, setValorVenta] = useState("");
     const [sid, setSid] = useState("");
-    const ip = "http://192.168.1.13:3000";
+    const ip = "http://172.18.60.92:3000";
   
     const saveVenta = async () => {
       if (!zona.trim() || !fecha.trim() || !valorventa.trim()) {

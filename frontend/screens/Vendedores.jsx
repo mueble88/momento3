@@ -17,27 +17,30 @@ export default function VendedoresScreen({ route }) {
   const onSubmit = data => console.log(data);
 
     const [isLoading, setLoading] = useState(true); //componente visual de carga, muestra una bolita cargando
-    const [data, setData] = useState([]);
+    const [data, setData] = useState([]);   
+    const [idvend, setIdvend] = useState("");
     const [nombre, setNombre] = useState("");
     const [correoe, setCorreo] = useState("");
     const [totalcomision, setTotalComision] = useState("");
     const [sid, setSid] = useState("");
-    const ip = "http://192.168.1.60:3000";
+    const ip = "http://172.18.60.92:3000";
 
   const saveVendedor = async () => {
-    if (!nombre.trim() || !correoe.trim() || !totalcomision.trim()) {
-      alert("Nombre, correo y comisión son obligatorios");
+    if (!idvend.trim || !nombre.trim() || !correoe.trim()) {
+      alert("Cédula, Nombre, correo y comisión son obligatorios");
       return;
     }
     setLoading(true);
     try {
       const response = await axios.post(`${ip}/api/vendedor`, {
+        idvend,
         nombre,
         correoe,
         totalcomision,
       });
       alert("Vendedor creado correctamente.");
       setSid("");
+      setIdvend("");
       setNombre("");
       setCorreo("");
       setTotalComision("");
@@ -54,7 +57,8 @@ export default function VendedoresScreen({ route }) {
     try {
       const response = await axios.get(`${ip}/api/vendedor`);
       setData(response.data);
-      setSid("");
+      setSid("");     
+      setIdvend("");     
       setNombre("");
       setCorreo("");
       setTotalComision("");
@@ -70,6 +74,7 @@ export default function VendedoresScreen({ route }) {
     try {
       const response = await axios.get(`${ip}/api/vendedor/${id}`);
       setData(response.data);
+      setIdvend(response.data.idvend);
       setNombre(response.data.nombre);
       setCorreo(response.data.correoe);
       setTotalComision(response.data.totalcomision);
@@ -79,6 +84,8 @@ export default function VendedoresScreen({ route }) {
       setLoading(false);
     }
   };
+
+
 
   useEffect(() => {
     //getUsers();
@@ -91,6 +98,20 @@ export default function VendedoresScreen({ route }) {
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <h1 style={styles.title}>Guarde o Busque vendedores</h1>
+        <input
+          type="number"
+          style={styles.inputs}
+          {...register('idvend', {
+            required: true,
+            pattern: /^\d+$/
+          })}
+          placeholder="Ingrese cédula"
+          onChange={e => setIdvend(e.target.value)}
+          value={idvend}
+        />
+        {errors.idvend?.type === 'required' && <Text style={styles.errmess}>Campo obligatorio</Text>}
+        {errors.idvend?.type === 'pattern' && <Text style={styles.errmess}>Solo números</Text>}
+
         <input
           type="text"
           style={styles.inputs}
@@ -127,8 +148,9 @@ export default function VendedoresScreen({ route }) {
             pattern: /^\d+$/
           })}
           placeholder="Ingrese comisión"
-          onChange={e => setTotalComision(e.target.value)}
+          onChange={e => setTotalComision(e.target.value=0)}
           value={totalcomision}
+          
         />
         {errors.totalcomision?.type === 'required' && <Text style={styles.errmess}>Campo obligatorio</Text>}
         {errors.totalcomision?.type === 'pattern' && <Text style={styles.errmess}>Solo números</Text>}
@@ -207,7 +229,7 @@ export default function VendedoresScreen({ route }) {
                 }
               }}
             >
-              <Text>Nombre: {item.nombre}| Correo: {item.correoe}| Comisión: {item.totalcomision}</Text>
+              <Text>Cedula: {item.idvend}| Nombre: {item.nombre}| Correo: {item.correoe}| Comisión: {item.totalcomision}</Text>
             </TouchableOpacity>
           )}
         />
