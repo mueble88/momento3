@@ -23,7 +23,7 @@ export default function VendedoresScreen({ route }) {
     const [correoe, setCorreo] = useState("");
     const [totalcomision, setTotalComision] = useState("");
     const [sid, setSid] = useState("");
-    const ip = "http://172.18.60.92:3000";
+    const ip = "http://192.168.1.14:3000";
 
   const saveVendedor = async () => {
     if (!idvend.trim || !nombre.trim() || !correoe.trim()) {
@@ -87,7 +87,6 @@ export default function VendedoresScreen({ route }) {
   };
 
 
-
   useEffect(() => {
     //getUsers();
     getVendedores();
@@ -99,6 +98,8 @@ export default function VendedoresScreen({ route }) {
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <h1 style={styles.title}>Guarde o Busque vendedores</h1>
+
+        {/* cedula */}
         <input
           type="number"
           style={styles.inputs}
@@ -113,6 +114,7 @@ export default function VendedoresScreen({ route }) {
         {errors.idvend?.type === 'required' && <Text style={styles.errmess}>Campo obligatorio</Text>}
         {errors.idvend?.type === 'pattern' && <Text style={styles.errmess}>Solo números</Text>}
 
+          {/* nombre */}
         <input
           type="text"
           style={styles.inputs}
@@ -127,6 +129,7 @@ export default function VendedoresScreen({ route }) {
         {errors.nombre?.type === 'required' && <Text style={styles.errmess}>Campo obligatorio</Text>}
         {errors.nombre?.type === 'pattern' && <Text style={styles.errmess}>Solo letras y/o espacios</Text>}
 
+          {/* correo */}
         <input
           type="text"
           style={styles.inputs}
@@ -141,6 +144,7 @@ export default function VendedoresScreen({ route }) {
         {errors.correoe?.type === 'required' && <Text style={styles.errmess}>Campo obligatorio</Text>}
         {errors.correoe?.type === 'pattern' && <Text style={styles.errmess}>Ingrese un correo válido</Text>}
 
+          {/* total comision */}
         <input
           type="text"
           style={styles.inputs}
@@ -166,35 +170,17 @@ export default function VendedoresScreen({ route }) {
 
       <View>
         <TextInput
-          placeholder="Ingrese ID a buscar"
+          placeholder="Ingrese cédula a buscar"
           style={styles.inputs}
-          onChangeText={(sid) => setSid(sid)}
-          value={sid}
+          onChangeText={(idvend) => setIdvend(idvend)}
+          value={idvend}
         />
-        {/* <TextInput
-          placeholder="Ingrese nombre"
-          style={styles.inputs}
-          onChangeText={(nombre) => setNombre(nombre)}
-          value={nombre}
-        />
-        <TextInput
-          placeholder="Ingrese correo"
-          style={styles.inputs}
-          onChangeText={(correoe) => setCorreo(correoe)}
-          value={correoe}
-        />
-        <TextInput
-          placeholder="Ingrese comisión"
-          style={styles.inputs}
-          onChangeText={(totalcomision) => setTotalComision(totalcomision)}
-          value={totalcomision}
-        /> */}
         
         <TouchableOpacity
           style={[styles.buttons, { backgroundColor: "#1ABC9C" }]}
-          onPress={() => getVendedorPorId(sid)}
+          onPress={() => getVendedorPorId(idvend)}
         >
-          <Text style={{ color: "white" }}>Buscar por ID</Text>
+          <Text style={{ color: "white" }}>Buscar por cédula</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -273,3 +259,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   }
 });
+

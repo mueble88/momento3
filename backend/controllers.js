@@ -1,7 +1,7 @@
 const { Vendedores, Venta } = require("./models.js");
 
 
-// ------- CLIENTES
+// ------- VENDEDORES
 
 exports.readVendedores = (req, res) =>
     Vendedores.find({}, (err, data) => {
@@ -11,7 +11,7 @@ exports.readVendedores = (req, res) =>
 
 
 exports.readVendedor = (req, res) =>
-    Vendedores.findOne({ _id: req.params.id }, (err, data) => {
+    Vendedores.findOne({ idvend: req.params.id }, (err, data) => {
         if (err) res.json({ error: err });
         else     res.json(data);
     });
@@ -54,7 +54,7 @@ exports.readVentas = (req, res) =>
 
 
 exports.readVenta = (req, res) =>
-    Venta.findOne({ _id: req.params.id }, (err, data) => {
+    Venta.findOne({ idvend: req.params.id }, (err, data) => {
         if (err) res.json({ error: err });
         else     res.json(data);
     });
@@ -65,7 +65,6 @@ exports.deleteVentas = (req, res) =>
         if (err) res.json({ error: err });
         else     res.json(data);
     });
-
 
 
 exports.updateVentas = (req, res) =>
@@ -79,10 +78,16 @@ exports.updateVentas = (req, res) =>
     );
 
 
-exports.createVentas = (req, res) =>
-    new Venta({ zona: req.body.zona, fecha: req.body.fecha, valorventa: req.body.valorventa  })
+exports.createVentas = (req, res) =>{
+    new Venta({idvend: req.body.idvend, zona: req.body.zona, fecha: req.body.fecha, valorventa: req.body.valorventa, comision: req.body.comision  })
     .save((err, data) => {
         if (err) res.json({ error: err });
-        else     res.json(data);
+        else {       
+            res.json(data);
+        }    
     });
-
+//find vendor by vendorId
+//update vendor total comission and
+//save vendor with updated commision to database
+    
+}

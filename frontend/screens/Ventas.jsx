@@ -6,19 +6,25 @@ import {
     TextInput,
     TouchableOpacity,
     StyleSheet,
+    Picker,
   } from "react-native";
   import axios from "axios";
   import React, { useEffect, useState } from "react";
+  import VendedoresScreen from "./Vendedores";
+
+  
   
   export default function VentasScreen({ route }) {
-    const [isLoading, setLoading] = useState(true); //componente visual de carga, muestra una bolita cargando
+    const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState([]);
     const [zona, setZona] = useState("");
     const [fecha, setFecha] = useState("");
     const [valorventa, setValorVenta] = useState("");
-    const [sid, setSid] = useState("");
-    const ip = "http://172.18.60.92:3000";
-  
+    const [idvend, setIdvend] = useState("");
+    const ip = "http://192.168.1.14:3000";
+
+
+    
     const saveVenta = async () => {
       if (!zona.trim() || !fecha.trim() || !valorventa.trim()) {
         alert("id vendedor, Zona, fecha y valor de la venta son obligatorios");
@@ -27,12 +33,14 @@ import {
       setLoading(true);
       try {
         const response = await axios.post(`${ip}/api/venta`, {
+          idvend:VendedoresScreen.idvend,
           zona,
           fecha,
           valorventa,
+          // comision
         });
         alert("venta creada correctamente.");
-        setSid("");
+        setIdvend("");
         setZona("");
         setFecha("");
         setValorVenta("");
@@ -43,13 +51,13 @@ import {
         setLoading(false);
       }
     };
-  
+    
     const getVenta = async () => {
       setLoading(true);
       try {
         const response = await axios.get(`${ip}/api/venta`);
         setData(response.data);
-        setSid("");
+        setIdvend("");
         setZona("");
         setFecha("");
         setValorVenta("");
@@ -80,21 +88,32 @@ import {
       getVenta();
     }, []);
   
-    return (
+   return (
       <View style={{ flex: 1, padding: 24 }}>
         <View>
           <TextInput
-            placeholder="Ingrese ID"
+            placeholder="Ingrese cedula vendedor"
             style={styles.inputs}
-            onChangeText={(sid) => setSid(sid)}
-            value={sid}
+            onChangeText={(idvend) => setIdvend(idvend)}
+            value={idvend}
           />
-          <TextInput
+
+          {/* <TextInput
             placeholder="Ingrese la zona"
             style={styles.inputs}
             onChangeText={(zona) => setZona(zona)}
             value={zona}
-          />
+          />  */}
+
+          <Picker
+          style={[styles.inputs,{borderColor:'green'}]}
+          selectedValue={zona}
+          onValueChange={(itemValue) => setZona(itemValue)}>
+                <Picker.Item label="Seleccione la zona" value="" />
+                <Picker.Item label="Sur" value="sur" />
+                <Picker.Item label="Norte" value="norte" />
+          </Picker>
+
           <TextInput
             placeholder="Ingrese la fecha"
             style={styles.inputs}
@@ -110,7 +129,7 @@ import {
           
           <TouchableOpacity
             style={[styles.buttons, { backgroundColor: "#1ABC9C" }]}
-            onPress={() => getVentaPorId(sid)}
+            onPress={() => getVentaPorId(idvend)}
           >
             <Text style={{ color: "white" }}>Buscar por ID</Text>
           </TouchableOpacity>
@@ -151,13 +170,15 @@ import {
                   }
                 }}
               >
-                <Text> venta: {item.valorventa}</Text>
+                <Text>cedula:{item.idvend} zona:{item.zona} venta: {item.valorventa}</Text>
               </TouchableOpacity>
             )}
           />
         )}
       </View>
     );
+
+   
   }
   
   const styles = StyleSheet.create({
