@@ -21,36 +21,53 @@ import {
     const [fecha, setFecha] = useState("");
     const [valorventa, setValorVenta] = useState("");
     const [idvend, setIdvend] = useState("");
-    const ip = "http://192.168.1.14:3000";
-
+    const ip = "http://172.18.47.188:3000";
+    
+    let comision = 0
+    let porcentaje = 0
 
     
     const saveVenta = async () => {
-      if (!zona.trim() || !fecha.trim() || !valorventa.trim()) {
-        alert("id vendedor, Zona, fecha y valor de la venta son obligatorios");
+      
+      if (!idvend.trim() || !zona.trim() || !fecha.trim() || !valorventa.trim()) {
+        alert("Todos los campos son obligatorios");
         return;
       }
-      setLoading(true);
-      try {
-        const response = await axios.post(`${ip}/api/venta`, {
-          idvend:VendedoresScreen.idvend,
-          zona,
-          fecha,
-          valorventa,
-          // comision
-        });
-        alert("venta creada correctamente.");
-        setIdvend("");
-        setZona("");
-        setFecha("");
-        setValorVenta("");
-      } catch (error) {
-        console.log(error);
-      } finally {
-        getVenta();
-        setLoading(false);
-      }
+      if(valorventa >= 2000000){
+        if(zona === "sur"){
+          porcentaje = 0.03 
+          
+        }else{
+          porcentaje = 0.02
+        }
+        comision = porcentaje * valorventa  
+        setLoading(true);
+        try {
+          const response = await axios.post(`${ip}/api/venta`, {
+            idvend,
+            zona,
+            fecha,
+            valorventa,
+            
+          });
+          alert("venta creada correctamente.");
+          setIdvend("");
+          setZona("");
+          setFecha("");
+          setValorVenta("");
+        } catch (error) {
+          console.log(error);
+        } finally {
+          getVenta();
+          setLoading(false);
+        }       
+      }else{
+        alert("la venta debe ser mayor a 2 millones")
+        return;
+      }     
     };
+
+
     
     const getVenta = async () => {
       setLoading(true);
@@ -127,7 +144,7 @@ import {
             value={valorventa}
           />
           
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={[styles.buttons, { backgroundColor: "#1ABC9C" }]}
             onPress={() => getVentaPorId(idvend)}
           >
@@ -139,7 +156,7 @@ import {
             onPress={getVenta}
           >
             <Text style={{ color: "white" }}>Buscar todas ventas</Text>
-          </TouchableOpacity>
+          </TouchableOpacity>  */}
   
           <TouchableOpacity
             style={[styles.buttons, { backgroundColor: "#1ABC9C" }]}
@@ -170,7 +187,7 @@ import {
                   }
                 }}
               >
-                <Text>cedula:{item.idvend} zona:{item.zona} venta: {item.valorventa}</Text>
+                <Text>cedula:{item.idvend} zona:{item.zona} venta: {item.valorventa} </Text>
               </TouchableOpacity>
             )}
           />

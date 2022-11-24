@@ -23,7 +23,7 @@ export default function VendedoresScreen({ route }) {
     const [correoe, setCorreo] = useState("");
     const [totalcomision, setTotalComision] = useState("");
     const [sid, setSid] = useState("");
-    const ip = "http://192.168.1.14:3000";
+    const ip = "http://172.18.47.188:3000";
 
   const saveVendedor = async () => {
     if (!idvend.trim || !nombre.trim() || !correoe.trim()) {
