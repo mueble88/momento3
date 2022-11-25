@@ -46,7 +46,10 @@ import {
           }else{
             porcentaje = 0.02
           }
-          comision = porcentaje * valorventa  
+          comision = porcentaje * valorventa
+          const actComi = await axios.put(`${ip}/api/vendedor/${idvend}`,{
+            totalcomision:comision
+          });
           setLoading(true);
           try {
             const response = await axios.post(`${ip}/api/venta`, {
@@ -118,6 +121,7 @@ import {
   
    return (
       <View style={{ flex: 1, padding: 24 }}>
+        <h1 style={styles.title}>Guarde sus ventas</h1>
         <View>
           <TextInput
             placeholder="Ingrese cedula vendedor"
@@ -232,5 +236,9 @@ import {
       textAlign: "center",
       padding: 5,
     },
+    title:{
+      fontFamily:'Helvetica',
+      textAlign: 'center',
+    }
   });
   
