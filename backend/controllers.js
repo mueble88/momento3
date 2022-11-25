@@ -26,8 +26,8 @@ exports.deleteVendedores = (req, res) =>
 
 exports.updateVendedores = (req, res) =>
     Vendedores.findOneAndUpdate(
-        { _id: req.params.id },
-        { $set: {idvend: req.body.idvend, nombre: req.body.nombre, correoe: req.body.correoe, totalcomision: req.body.totalcomision } }, 
+        { idvend: req.params.id },
+        { $set: { totalcomision: req.body.totalcomision } }, 
         (err, data) => {
             if (err) res.json({ error: err });
             else     res.json(data);

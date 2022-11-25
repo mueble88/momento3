@@ -28,43 +28,54 @@ import {
 
     
     const saveVenta = async () => {
-      
-      if (!idvend.trim() || !zona.trim() || !fecha.trim() || !valorventa.trim()) {
-        alert("Todos los campos son obligatorios");
-        return;
-      }
-      if(valorventa >= 2000000){
-        if(zona === "sur"){
-          porcentaje = 0.03 
-          
-        }else{
-          porcentaje = 0.02
+      const vendedor= await axios.get(`${ip}/api/vendedor/${idvend}`);
+      setData(vendedor.data)
+      console.log(vendedor.data)
+
+      if(vendedor.data != undefined){
+        //alert("encontro"+vendedor.data.idvend)
+        if (!idvend.trim() || !zona.trim() || !fecha.trim() || !valorventa.trim()) {
+          alert("Todos los campos son obligatorios");
+          return;
         }
-        comision = porcentaje * valorventa  
-        setLoading(true);
-        try {
-          const response = await axios.post(`${ip}/api/venta`, {
-            idvend,
-            zona,
-            fecha,
-            valorventa,
+        
+        if(valorventa >= 2000000){
+          if(zona === "sur"){
+            porcentaje = 0.03 
             
-          });
-          alert("venta creada correctamente.");
-          setIdvend("");
-          setZona("");
-          setFecha("");
-          setValorVenta("");
-        } catch (error) {
-          console.log(error);
-        } finally {
-          getVenta();
-          setLoading(false);
-        }       
+          }else{
+            porcentaje = 0.02
+          }
+          comision = porcentaje * valorventa  
+          setLoading(true);
+          try {
+            const response = await axios.post(`${ip}/api/venta`, {
+              idvend,
+              zona,
+              fecha,
+              valorventa,
+              
+            });
+            alert("venta creada correctamente.");
+            setIdvend("");
+            setZona("");
+            setFecha("");
+            setValorVenta("");
+          } catch (error) {
+            console.log(error);
+          } finally {
+            getVenta();
+            setLoading(false);
+          }       
+        }else{
+          alert("la venta debe ser mayor a 2 millones")
+          return;
+        }
       }else{
-        alert("la venta debe ser mayor a 2 millones")
-        return;
-      }     
+        alert("vendedor no encontrado")
+      }
+
+     
     };
 
 
